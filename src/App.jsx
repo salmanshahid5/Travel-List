@@ -26,6 +26,12 @@ function Form() {
   // dropdown state
   const [itemNumber, SetItemNumber] = useState(1);
 
+  // Add btn
+
+  function addHandler() {
+   
+  }
+
   return (
     <div className="add-form">
       <h3>What do you need for your 😍 trip</h3>
@@ -43,14 +49,16 @@ function Form() {
         placeholder="Item Name"
         value={inputText}
       ></input>
-      <button className="add-btn">Add</button>
+      <button className="add-btn" onClick={addHandler}>
+        Add
+      </button>
     </div>
   );
 }
 
 // packing list
 
-function PackingList() {
+function PackingList({ itemList, setItemList }) {
   const [isChecked, setIsChecked] = useState(false);
 
   function handleCheck() {
@@ -59,18 +67,36 @@ function PackingList() {
 
   return (
     <div className="PackingList">
-      <div className="list">
-        <input type="checkbox" onClick={handleCheck} />
-        <p style={{ 
-          textDecoration: isChecked ? 'line-through' : 'none', 
-          textDecorationColor: isChecked ? 'black' : 'none', 
-          color: isChecked ? 'white' : 'white'
-        }}>
-          salman
-        </p>
-        <button className="cancel">❌</button>
-      </div>
+      {itemList.map((item) => (
+        <div className="list" key={item.id}>
+          <input
+            type="checkbox"
+            checked={item.packed}
+            onChange={() => handleCheck}
+          />
+          <p
+            style={{
+              textDecoration: item.packed ? "line-through" : "none",
+              color: item.packed ? "gray" : "white",
+            }}
+          >
+            salman
+          </p>
+          <button className="cancel">❌</button>
+        </div>
+      ))}
     </div>
   );
 }
 
+// footer section
+
+function Stats() {
+  return (
+    <footer>
+      <em className="Stats">
+        You have X itmes on your list and you already packed X (%)
+      </em>
+    </footer>
+  );
+}
