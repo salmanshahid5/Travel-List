@@ -1,12 +1,18 @@
 import { useState } from "react";
 import "./App.css";
 function App() {
+  const [itemList, setItemList] = useState([]);
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{
+        height: "100vh",
+      }}
+    >
       <Logo />
-      <Form />
-      <PackingList />
-      <Stats />
+      <Form itemList={itemList} setItemList={setItemList} />
+      <PackingList itemList={itemList} setItemList={setItemList} />
+      <Stats itemList={itemList} />
     </div>
   );
 }
@@ -20,7 +26,8 @@ function Logo() {
 
 // form section
 
-function Form() {
+function Form(props) {
+  const { itemList, setItemList } = props || {};
   // input state
   const [inputText, SetInputText] = useState("");
   // dropdown state
@@ -29,9 +36,15 @@ function Form() {
   // Add btn
 
   function addHandler() {
-   
+    const mylist = [...itemList];
+    mylist.push({
+      name: inputText,
+      number: itemNumber,
+    });
+    setItemList(mylist);
+    SetInputText("");
+    SetItemNumber(1);
   }
-
   return (
     <div className="add-form">
       <h3>What do you need for your 😍 trip</h3>
@@ -58,17 +71,22 @@ function Form() {
 
 // packing list
 
-function PackingList({ itemList, setItemList }) {
+function PackingList(props) {
+  const { itemList, setItemList } = props || {};
   const [isChecked, setIsChecked] = useState(false);
-
   function handleCheck() {
     setIsChecked(!isChecked);
   }
 
+  function handleCancel(index) {
+    const updatedList = itemList.filter((_, idx) => idx !== index);
+    setItemList(updatedList);
+  }
+
   return (
     <div className="PackingList">
-      {itemList.map((item) => (
-        <div className="list" key={item.id}>
+      {itemList.map((item, index) => (
+        <div className="list" key={index}>
           <input
             type="checkbox"
             checked={item.packed}
@@ -80,9 +98,11 @@ function PackingList({ itemList, setItemList }) {
               color: item.packed ? "gray" : "white",
             }}
           >
-            salman
+            {item.number} {item.name}
           </p>
-          <button className="cancel">❌</button>
+          <button className="cancel" onClick={() => handleCancel(index)}>
+            ❌
+          </button>
         </div>
       ))}
     </div>
@@ -91,11 +111,12 @@ function PackingList({ itemList, setItemList }) {
 
 // footer section
 
-function Stats() {
+function Stats({ itemList }) {
   return (
     <footer>
       <em className="Stats">
-        You have X itmes on your list and you already packed X (%)
+        You have {itemList.length} itmes on your list and you already packed X
+        (%)
       </em>
     </footer>
   );
