@@ -1,3 +1,3 @@
 FAR AWAY Travelling ToDo List Web App
 
-!(assets/faraway.jpeg)
+![Logo](assets/faraway.jpeg)
